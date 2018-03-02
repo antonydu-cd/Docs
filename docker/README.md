@@ -10,6 +10,9 @@
 # 终止docker容器
     sudo docker stop container_name/container_id
 
+# 启动被终止的docker容器
+    sudo docker start container_name/container_id
+
 # 本机镜像列表
     sudo docker images
 
