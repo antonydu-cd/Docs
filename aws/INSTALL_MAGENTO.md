@@ -103,7 +103,7 @@ FLUSH PRIVILEGES;
 ### 安装php7.1
 ```shell
 sudo rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-yum install -y http://dl.iuscommunity.org/pub/ius/stable/CentOS/7/x86_64/ius-release-1.0-14.ius.centos7.noarch.rpm
+sudo yum install -y http://dl.iuscommunity.org/pub/ius/stable/CentOS/7/x86_64/ius-release-1.0-14.ius.centos7.noarch.rpm
 sudo yum -y update
 sudo yum -y install php71u php71u-pdo php71u-mysqlnd php71u-opcache php71u-xml php71u-mcrypt php71u-gd php71u-devel php71u-intl php71u-mbstring php71u-bcmath php71u-json php71u-iconv php71u-soap
 ```
@@ -132,3 +132,35 @@ PasswordAuthentication yes
 ```shell
 sudo service sshd restart
 ```
+
+### composer install magento2
+#### 切换到网站根目录
+```shell
+cd /var/www/html
+```
+#### 安装Magento2
+```shell
+composer create-project --repository-url=https://repo.magento.com/ magento/project-community-edition .
+```
+### 安装sample-data
+```shell
+php bin/magento sampledata:deploy
+```
+### 命令行安装
+```shell
+php -f bin/magento setup:install \
+        --admin-firstname "antony" \
+        --admin-lastname "du" \
+        --admin-email "antony@ebrook.com.tw" \
+        --admin-user "antony.du" \
+        --admin-password "12345abc" \
+        --base-url "http://34.220.183.209/" \
+        --backend-frontname "SiteAdmin" \
+        --db-host "127.0.0.1" \
+        --db-name "magento_test" \
+        --db-user "magento_test" \
+        --db-password "Magento_12345" \
+        --session-save "files" \
+        --use-rewrites "1"
+```
+### 开启apache url rewrite
