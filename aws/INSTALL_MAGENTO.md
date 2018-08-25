@@ -110,6 +110,7 @@ sudo service sshd restart
 ### 安装php7.1
 ```shell
 sudo rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-sudo rpm -Uvh https://mirror.webtatic.com/yum/el7/webtatic-release.rpm
-sudo yum -y install php71w-devel php71w-fpm
+yum install -y http://dl.iuscommunity.org/pub/ius/stable/CentOS/7/x86_64/ius-release-1.0-14.ius.centos7.noarch.rpm
+sudo yum -y update
+sudo yum -y install php71u php71u-pdo php71u-mysqlnd php71u-opcache php71u-xml php71u-mcrypt php71u-gd php71u-devel php71u-intl php71u-mbstring php71u-bcmath php71u-json php71u-iconv php71u-soap
 ```
