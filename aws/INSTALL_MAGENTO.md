@@ -50,3 +50,66 @@ sudo chmod 2775 /var/www && find /var/www -type d -exec sudo chmod 2775 {} \;
 ```shell
 find /var/www -type f -exec sudo chmod 0664 {} \;
 ```
+
+### 安装mysql源
+```shell
+sudo yum localinstall https://dev.mysql.com/get/mysql57-community-release-el7-9.noarch.rpm
+```
+### 安装mysql
+```shell
+sudo yum -y install mysql-community-server
+```
+### 启动mysql服务器
+```shell
+sudo systemctl start mysqld
+```
+### 如果您希望每次启动时 MariaDB 服务器都启动，请键入以下命令。
+```shell
+sudo systemctl enable mysqld
+```
+### 通过一下命令验证mysql是否已启用
+```shell
+sudo systemctl is-enabled mysqld
+```
+### 查看临时密码
+```shell
+grep 'temporary' /var/log/mysqld.log
+```
+### 修改密码
+```shell
+sudo mysql_secure_installation
+```
+### MySQL 数据库创建用户和密码
+```shell
+CREATE USER 'magento_test'@'localhost' IDENTIFIED BY 'Magento_12345';
+```
+### 创建数据库
+```shell
+CREATE DATABASE `magento_test`;
+```
+###  给用户magento_test授予数据库magento_test的完全访问权限
+```shell
+GRANT ALL PRIVILEGES ON `magento_test`.* TO "magento_test"@"localhost";
+```
+### 刷新数据库权限以接受您的所有更改
+```shell
+FLUSH PRIVILEGES;
+```
+### 设置登录密码
+```shell
+sudo passwd ec2-user
+```
+### 更新 /etc/ssh/sshd_config 文件中的 PasswordAuthentication 参数：
+```shell
+PasswordAuthentication yes
+```
+### 重新启动 SSH 服务
+```shell
+sudo service sshd restart
+```
+### 安装php7.1
+```shell
+sudo rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+sudo rpm -Uvh https://mirror.webtatic.com/yum/el7/webtatic-release.rpm
+sudo yum -y install php71w-devel php71w-fpm
+```
