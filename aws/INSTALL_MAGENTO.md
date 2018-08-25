@@ -15,6 +15,10 @@ yum info httpd
 ```shell
 sudo systemctl start httpd
 ```
+### 重新启动Apache服务器
+```shell
+sudo systemctl restart httpd
+```
 ### 使用 systemctl 命令可将 Apache Web 服务器配置为在每次系统启动时启动
 ```shell
 sudo systemctl enable httpd
@@ -95,6 +99,7 @@ GRANT ALL PRIVILEGES ON `magento_test`.* TO "magento_test"@"localhost";
 ```shell
 FLUSH PRIVILEGES;
 ```
+
 ### 安装php7.1
 ```shell
 sudo rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
@@ -104,7 +109,15 @@ sudo yum -y install php71u php71u-pdo php71u-mysqlnd php71u-opcache php71u-xml p
 ```
 ### 修改内存限制
 ```shell
-sed -i 's/memory_limit = 128M/memory_limit = -1/g' /etc/php.ini 
+sudo sed -i 's/memory_limit = 128M/memory_limit = -1/g' /etc/php.ini
+```
+
+# Install Composer
+```shell
+curl -sS https://getcomposer.org/installer | php
+```
+```shell
+sudo mv composer.phar /usr/bin/composer
 ```
 
 ### 设置登录密码
