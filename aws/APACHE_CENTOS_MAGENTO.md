@@ -107,6 +107,9 @@ sudo yum install -y http://dl.iuscommunity.org/pub/ius/stable/CentOS/7/x86_64/iu
 sudo yum -y update
 sudo yum -y install php71u php71u-pdo php71u-mysqlnd php71u-opcache php71u-xml php71u-mcrypt php71u-gd php71u-devel php71u-intl php71u-mbstring php71u-bcmath php71u-json php71u-iconv php71u-soap
 ```
+```shell
+sudo yum -y install php70u php70u-pdo php70u-mysqlnd php70u-opcache php70u-xml php70u-mcrypt php70u-gd php70u-devel php70u-intl php70u-mbstring php70u-bcmath php70u-json php70u-iconv php70u-soap
+```
 ### 修改内存限制
 ```shell
 sudo sed -i 's/memory_limit = 128M/memory_limit = -1/g' /etc/php.ini
