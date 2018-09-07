@@ -1,0 +1,198 @@
+# ALI ECS安装Magento
+## 更新软件
+```shell
+sudo yum update -y
+```
+### 启用EPEL rpm软件包
+```shell
+sudo yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+```
+或者
+```shell
+sudo yum install -y epel-release
+```
+### 安装Nginx服务器
+```shell
+sudo yum install -y nginx
+```
+### 查看安装信息
+```shell
+yum info nginx
+```
+### 使用 systemctl 命令可将 nginx Web 服务器配置为在每次系统启动时启动
+```shell
+sudo systemctl enable nginx
+```
+### 启动 nginx Web 服务器
+```shell
+sudo systemctl start nginx
+```
+### 重新启动nginx服务器
+```shell
+sudo systemctl restart nginx
+```
+### 设置文件权限
+#### 将用户 (这里指 ec2-user) 添加到 apache
+```shell
+sudo usermod -a -G nginx ec2-user
+```
+#### 先退出再重新登录以选取新组，然后验证您的成员资格
+##### 退出 (使用 exit 命令或关闭终端窗口)：
+```shell
+exit
+```
+##### 要验证您是否为 apache 组的成员，请重新连接到实例，然后运行以下命令：
+```shell
+groups
+```
+#### 将 /var/www 及其内容的组所有权更改到 apache 组
+```shell
+sudo chown -R ec2-user:nginx /var/www
+```
+#### 要添加组写入权限以及设置未来子目录上的组 ID，请更改 /var/www 及其子目录的目录权限
+```shell
+sudo chmod 2775 /var/www && find /var/www -type d -exec sudo chmod 2775 {} \;
+```
+#### 要添加组写入权限，请递归地更改 /var/www 及其子目录的文件权限
+```shell
+find /var/www -type f -exec sudo chmod 0664 {} \;
+```
+
+### 安装mysql源
+```shell
+sudo yum localinstall https://dev.mysql.com/get/mysql57-community-release-el7-9.noarch.rpm
+```
+### 安装mysql
+```shell
+sudo yum -y install mysql-community-server
+```
+### 启动mysql服务器
+```shell
+sudo systemctl start mysqld
+```
+### 如果您希望每次启动时 MariaDB 服务器都启动，请键入以下命令。
+```shell
+sudo systemctl enable mysqld
+```
+### 通过一下命令验证mysql是否已启用
+```shell
+sudo systemctl is-enabled mysqld
+```
+### 查看临时密码
+```shell
+grep 'temporary' /var/log/mysqld.log
+```
+### 修改密码
+```shell
+sudo mysql_secure_installation
+```
+### MySQL 数据库创建用户和密码
+```shell
+CREATE USER 'magento_test'@'localhost' IDENTIFIED BY 'Magento_12345';
+```
+### 创建数据库
+```shell
+CREATE DATABASE `magento_test`;
+```
+###  给用户magento_test授予数据库magento_test的完全访问权限
+```shell
+GRANT ALL PRIVILEGES ON `magento_test`.* TO "magento_test"@"localhost";
+```
+### 刷新数据库权限以接受您的所有更改
+```shell
+FLUSH PRIVILEGES;
+```
+
+### 安装php7.1
+```shell
+sudo rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+sudo yum install -y http://dl.iuscommunity.org/pub/ius/stable/CentOS/7/x86_64/ius-release-1.0-14.ius.centos7.noarch.rpm
+sudo yum -y update
+sudo yum -y install php71u php71u-pdo php71u-mysqlnd php71u-opcache php71u-xml php71u-mcrypt php71u-gd php71u-devel php71u-intl php71u-mbstring php71u-bcmath php71u-json php71u-iconv php71u-soap php71u-fpm
+```
+```shell
+sudo yum -y install php70u php70u-pdo php70u-mysqlnd php70u-opcache php70u-xml php70u-mcrypt php70u-gd php70u-devel php70u-intl php70u-mbstring php70u-bcmath php70u-json php70u-iconv php70u-soap php71u-fpm
+```
+### 修改内存限制
+```shell
+sudo sed -i 's/memory_limit = 128M/memory_limit = -1/g' /etc/php.ini
+```
+
+### 修改php-fpm配置 /etc/php-fpm.d/www.conf
+```shell
+listen = /run/php-fpm/www.sock
+listen.owner = nginx
+listen.group = nginx
+listen.mode = 0664
+user = nginx
+group = nginx
+```
+
+### 配置nginx虚拟机 /etc/nginx/nginx.conf
+```shell
+server {
+    listen 80;
+    server_name _;
+    root   /var/www/html;
+    index  index.php index.html index.htm;
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+    location ~ \.php$ {
+        try_files $uri =404;
+        fastcgi_pass   unix:/run/php-fpm/www.sock;
+        fastcgi_index  index.php;
+        fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+        include        fastcgi_params;
+    }
+}
+```
+### 启动php-fpm服务
+```shell
+sudo systemctl start php-fpm
+```
+
+# Install Composer
+```shell
+curl -sS https://getcomposer.org/installer | php
+```
+```shell
+sudo mv composer.phar /usr/bin/composer
+```
+
+### composer install magento2
+#### 切换到网站根目录
+```shell
+cd /var/www/html
+```
+#### 安装Magento2
+```shell
+composer create-project --repository-url=https://repo.magento.com/ magento/project-community-edition .
+```
+```shell
+composer create-project --repository-url=https://repo.magento.com/ magento/project-enterprise-edition .
+```
+```shell
+composer require magento/extension-b2b
+```
+### 安装sample-data
+```shell
+php bin/magento sampledata:deploy
+```
+### 命令行安装
+```shell
+php -f bin/magento setup:install \
+        --admin-firstname "antony" \
+        --admin-lastname "du" \
+        --admin-email "antony@ebrook.com.tw" \
+        --admin-user "antony.du" \
+        --admin-password "12345abc" \
+        --base-url "http://47.75.197.168/" \
+        --backend-frontname "SiteAdmin" \
+        --db-host "127.0.0.1" \
+        --db-name "magento_test" \
+        --db-user "root" \
+        --db-password "Magento_12345" \
+        --session-save "files" \
+        --use-rewrites "1"
+```
