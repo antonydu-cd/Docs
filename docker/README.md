@@ -26,6 +26,9 @@
     sudo docker run --name mysql -p 12345:3306 -e MYSQL_ROOT_PASSWORD=123456 -d mysql:5.5
 
     sudo docker run -d -p8080:80 -v /home/silk/htdocs/8net:/var/www/html grass/apache:php55
+    
+    sudo docker run -d -p8080:80 -v /usr/local/var/www/cn-8net:/var/www/html --link mysql grass/apache:php55-ioncube
+    
 
 # 进入docker容器
     sudo docker exec -it mysql bash
