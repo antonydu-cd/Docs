@@ -160,10 +160,33 @@ php -f bin/magento setup:install \
         --base-url "http://34.220.183.209/" \
         --backend-frontname "SiteAdmin" \
         --db-host "127.0.0.1" \
-        --db-name "magento_test" \
-        --db-user "magento_test" \
-        --db-password "Magento_12345" \
+        --db-name "magento2" \
+        --db-user "root" \
+        --db-password "12345abc" \
         --session-save "files" \
         --use-rewrites "1"
 ```
-### 开启apache url rewrite
+### 安装SSL模块
+```
+sudo yum install mod_ssl -y
+```
+### 创建目录
+```
+mkdir /etc/httpd/ssl/
+```
+### 上传证书
+
+### 编辑ssl配置文件 /etc/httpd/conf.d/ssl.conf
+```
+DocumentRoot "/var/www/html"  #网页文件路径
+ServerName 域名:443  #改为自己的域名
+SSLEngine on  #启用SSL功能
+SSLCertificateFile   /etc/httpd/ssl/2_www.**.cn.crt   #填写证书文件路径
+SSLCertificateKeyFile   /etc/httpd/ssl/3_www.***.cn.key  #填写私钥文件路径
+SSLCertificateChainFile   /etc/httpd/ssl/1_root_bundle.crt  #填写证书链文件路径
+```
+
+###重启服务
+```
+service httpd restart
+```
