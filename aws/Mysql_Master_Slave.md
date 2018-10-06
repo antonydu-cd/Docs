@@ -1,4 +1,4 @@
-# AWS EC2安装Mysql
+# AWS EC2安装Mysql并设置主从
 ## 安装mysql
 ```
 sudo yum install mysql
