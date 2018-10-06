@@ -28,6 +28,8 @@
     sudo docker run -d -p8080:80 -v /home/silk/htdocs/8net:/var/www/html grass/apache:php55
     
     sudo docker run -d -p8080:80 -v /usr/local/var/www/cn-8net:/var/www/html --link mysql grass/apache:php55-ioncube
+
+    sudo docker run -d -p8080:80 -v /usr/local/var/www/acer_PAP_EC:/var/www/html -v /usr/local/var/www/acer_PAP_EC/app.conf:/etc/apache2/sites-enabled/app.conf --link mysql57 grass/apache:php55-ioncube
     
 
 # 进入docker容器
