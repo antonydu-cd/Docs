@@ -99,6 +99,12 @@ GRANT ALL PRIVILEGES ON `magento_test`.* TO "magento_test"@"localhost";
 ```shell
 FLUSH PRIVILEGES;
 ```
+### 只安装client：
+```shell
+rpm -Uvh http://dev.mysql.com/get/mysql-community-release-el7-5.noarch.rpm
+yum -y install mysql-community-client
+```
+
 
 ### 安装php7.1
 ```shell
