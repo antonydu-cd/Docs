@@ -201,3 +201,39 @@ php -f bin/magento setup:install \
         --session-save "files" \
         --use-rewrites "1"
 ```
+
+    upstream fastcgi_backend {
+        server  unix:/run/php-fpm/www.sock;
+    }
+
+    server {
+        listen       80 default_server;
+        listen       [::]:80 default_server;
+        server_name  magento2.8net.com;
+	    return 301 https://$server_name$request_uri;
+    }
+
+    server {
+        listen       443 ssl http2 default_server;
+        listen       [::]:443 ssl http2 default_server;
+        server_name  magento2.8net.com;
+	index  index.php index.html index.htm;
+        set $MAGE_ROOT /var/www/html;
+        include /var/www/html/nginx.conf.sample;
+
+	ssl on;
+        ssl_certificate "/etc/pki/nginx/server.crt";
+        ssl_certificate_key "/etc/pki/nginx/server.key";
+        ssl_session_cache shared:SSL:1m;
+        ssl_session_timeout  10m;
+        ssl_ciphers HIGH:!aNULL:!MD5;
+        ssl_prefer_server_ciphers on;
+
+        error_page 404 /404.html;
+            location = /40x.html {
+        }
+
+        error_page 500 502 503 504 /50x.html;
+            location = /50x.html {
+        }
+    }
