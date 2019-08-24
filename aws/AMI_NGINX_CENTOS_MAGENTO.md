@@ -42,6 +42,13 @@ sudo service mysqld start
 sudo service mysqld reload
 ```
 
+### SWAP FILE
+free -h
+sudo dd if=/dev/zero of=/swapfile count=4096 bs=1MiB
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile
+
 ### 安装php7.2
 sudo yum -y install php72 php72-pdo php72-mysqlnd php72-opcache php72-xml php72-mcrypt php72-gd php72-devel php72-intl php72-mbstring php72-bcmath php72-json php72-iconv php72-soap php72-fpm
 ### 修改内存限制

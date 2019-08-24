@@ -5,7 +5,7 @@ sudo yum update -y
 ```
 ### 启用EPEL rpm软件包
 ```shell
-sudo yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+sudo amazon-linux-extras install epel
 ```
 或者
 ```shell
@@ -80,7 +80,7 @@ sudo systemctl is-enabled mysqld
 ```
 ### 查看临时密码
 ```shell
-grep 'temporary' /var/log/mysqld.log
+sudo grep 'temporary' /var/log/mysqld.log
 ```
 ### 修改密码
 ```shell
@@ -108,10 +108,15 @@ rpm -Uvh http://dev.mysql.com/get/mysql-community-release-el7-5.noarch.rpm
 yum -y install mysql-community-client
 ```
 
-### 安装php7.1
+### 安装php7.2
+```shell
+sudo yum install https://centos7.iuscommunity.org/ius-release.rpm
+sudo yum -y install php72u php72u-pdo php72u-mysqlnd php72u-opcache php72u-xml php72u-gd php72u-devel php72u-intl php72u-mbstring php72u-bcmath php72u-json php72u-iconv php72u-soap php72u-fpm
+```
+
 ```shell
 sudo rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-sudo yum install -y http://dl.iuscommunity.org/pub/ius/stable/CentOS/7/x86_64/ius-release-1.0-14.ius.centos7.noarch.rpm
+sudo yum install -y http://dl.iuscommunity.org/pub/ius/stable/CentOS/7/x86_64/ius-release-1.0-15.ius.centos7.noarch.rpm
 sudo yum -y update
 sudo yum -y install php71u php71u-pdo php71u-mysqlnd php71u-opcache php71u-xml php71u-mcrypt php71u-gd php71u-devel php71u-intl php71u-mbstring php71u-bcmath php71u-json php71u-iconv php71u-soap php71u-fpm
 ```
@@ -139,18 +144,29 @@ server {
     listen 80;
     server_name _;
     root   /var/www/html;
-    index  index.php index.html index.htm;
+
     location / {
         try_files $uri $uri/ /index.php?$query_string;
     }
-    location ~ \.php$ {
-        try_files $uri =404;
-        fastcgi_pass   unix:/run/php-fpm/www.sock;
-        fastcgi_index  index.php;
-        fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
-        include        fastcgi_params;
-    }
 }
+```
+
+### 配置php-fpm：新增 /etc/nginx/default.d/php.conf
+```shell
+index index.php index.html index.htm;
+
+location ~ \.(php|phar)(/.*)?$ {
+    fastcgi_split_path_info ^(.+\.(?:php|phar))(/.*)$;
+
+    fastcgi_intercept_errors on;
+    fastcgi_index  index.php;
+    include        fastcgi_params;
+    fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+    fastcgi_param  PATH_INFO $fastcgi_path_info;
+    fastcgi_pass   127.0.0.1:9000;
+}
+```
+
 ```
 ### 启动php-fpm服务
 ```shell
@@ -164,6 +180,12 @@ curl -sS https://getcomposer.org/installer | php
 ```shell
 sudo mv composer.phar /usr/bin/composer
 ```
+### SWAP FILE
+free -h
+sudo dd if=/dev/zero of=/swapfile count=4096 bs=1MiB
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile
 
 ### composer install magento2
 #### 切换到网站根目录
@@ -192,10 +214,10 @@ php -f bin/magento setup:install \
         --admin-email "antony@ebrook.com.tw" \
         --admin-user "antony.du" \
         --admin-password "12345abc" \
-        --base-url "http://47.75.197.168/" \
+        --base-url "http://emea.ebrook.xyz/" \
         --backend-frontname "SiteAdmin" \
-        --db-host "127.0.0.1" \
-        --db-name "magento_test" \
+        --db-host "database.c8gzv9exvckw.ap-northeast-1.rds.amazonaws.com" \
+        --db-name "magento232" \
         --db-user "root" \
         --db-password "Magento_12345" \
         --session-save "files" \

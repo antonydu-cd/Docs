@@ -1,3 +1,5 @@
+
+
 # 运行docker 进入一个 ubuntu17.10系统的容器命令行
     sudo docker run -it ubuntu:17.10 /bin/bash
 
@@ -23,7 +25,7 @@
     sudo docker pull mysql:5.6
 
 # 运行mysql镜像
-    sudo docker run --name mysql -p 12345:3306 -e MYSQL_ROOT_PASSWORD=123456 -d mysql:5.5
+    sudo docker run --name mysql -p 3305:3306 -e MYSQL_ROOT_PASSWORD=12345abc -d mysql:5.5
 
     sudo docker run -d -p8080:80 -v /home/silk/htdocs/8net:/var/www/html grass/apache:php55
     

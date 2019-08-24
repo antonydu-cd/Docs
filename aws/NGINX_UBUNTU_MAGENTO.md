@@ -21,6 +21,22 @@ sudo systemctl start nginx
 sudo systemctl restart nginx
 ```
 
+### 安装mysql
+sudo apt-get -y install mysql-server-5.7 mysql-client
+
+sudo mysql_secure_installation
+
+sudo mysql
+
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '12345abcD@';
+FLUSH PRIVILEGES;
+
+### SWAP FILE
+free -h
+sudo dd if=/dev/zero of=/swapfile count=4096 bs=1MiB
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile
 
 location / {
     # First attempt to serve request as file, then
