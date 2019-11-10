@@ -51,3 +51,8 @@
 
 # 创建镜像
     sudo docker build -t image_name .
+
+ElasticSearch:
+    docker run --restart=always -d --name elasticsearch -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:6.7.1
+
+    docker run --restart=always -d --name redis -p 6379:6379 redis

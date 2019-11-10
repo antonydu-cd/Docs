@@ -168,10 +168,10 @@ php -f bin/magento setup:install \
         --admin-email "antony@ebrook.com.tw" \
         --admin-user "antony.du" \
         --admin-password "12345abc" \
-        --base-url "http://13.114.10.79/" \
+        --base-url "http://emea.ebrook.xyz/" \
         --backend-frontname "SiteAdmin" \
         --db-host "database.c8gzv9exvckw.ap-northeast-1.rds.amazonaws.com" \
-        --db-name "gti" \
+        --db-name "pa_uat" \
         --db-user "root" \
         --db-password "Magento_12345" \
         --session-save "files" \

@@ -182,7 +182,7 @@ sudo mv composer.phar /usr/bin/composer
 ```
 ### SWAP FILE
 free -h
-sudo dd if=/dev/zero of=/swapfile count=4096 bs=1MiB
+sudo dd if=/dev/zero of=/swapfile count=8192 bs=1MiB
 sudo chmod 600 /swapfile
 sudo mkswap /swapfile
 sudo swapon /swapfile
@@ -214,12 +214,12 @@ php -f bin/magento setup:install \
         --admin-email "antony@ebrook.com.tw" \
         --admin-user "antony.du" \
         --admin-password "12345abc" \
-        --base-url "http://emea.ebrook.xyz/" \
+        --base-url "http://local.magento228.com/" \
         --backend-frontname "SiteAdmin" \
-        --db-host "database.c8gzv9exvckw.ap-northeast-1.rds.amazonaws.com" \
-        --db-name "magento232" \
+        --db-host "127.0.0.1" \
+        --db-name "magento228" \
         --db-user "root" \
-        --db-password "Magento_12345" \
+        --db-password "12345abc" \
         --session-save "files" \
         --use-rewrites "1"
 ```
@@ -239,7 +239,7 @@ php -f bin/magento setup:install \
         listen       443 ssl http2 default_server;
         listen       [::]:443 ssl http2 default_server;
         server_name  magento2.8net.com;
-	index  index.php index.html index.htm;
+	    index  index.php index.html index.htm;
         set $MAGE_ROOT /var/www/html;
         include /var/www/html/nginx.conf.sample;
 
